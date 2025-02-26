@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Shared Moment{% endblock %}
+{% block content %}
+    <h1 style="font-size: 2rem; margin-bottom: 2rem;">Shared Moment</h1>
+    <div class="entry" style="padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+        <strong style="font-size: 1.2rem;">{{ entry.timestamp }}</strong> - {{ entry.location }}
+        <p style="margin: 0.5rem 0;">{{ entry.text }}</p>
+        {% if entry.photo %}
+            <img src="{{ entry.photo.url }}" alt="Photo" style="max-width: 200px; border-radius: 5px; margin-top: 0.5rem;">
+        {% endif %}
+        {% if entry.audio %}
+            <audio controls src="{{ entry.audio.url }}" style="width: 100%; margin-top: 0.5rem;"></audio>
+        {% endif %}
+        {% if entry.video %}
+            <video controls src="{{ entry.video.url }}" style="max-width: 300px; border-radius: 5px; margin-top: 0.5rem;"></video>
+        {% endif %}
+    </div>
+{% endblock %}

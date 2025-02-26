@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Timeline{% endblock %}
+{% block content %}
+    <h1 style="font-size: 2rem; margin-bottom: 2rem;">Your Timeline</h1>
+    {% for entry in entries %}
+        <div class="entry" style="margin-bottom: 2rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+            <span style="width: 10px; height: 10px; background: #00e6ff; border-radius: 50%; display: inline-block; margin-right: 10px;"></span>
+            <strong style="font-size: 1.2rem;">{{ entry.timestamp }}</strong> - {{ entry.location }}
+            <p style="margin: 0.5rem 0;">{{ entry.text }}</p>
+            {% if entry.photo %}
+                <img src="{{ entry.photo.url }}" alt="Photo" style="max-width: 200px; border-radius: 5px; margin-top: 0.5rem;">
+            {% endif %}
+            {% if entry.audio %}
+                <audio controls src="{{ entry.audio.url }}" style="width: 100%; margin-top: 0.5rem;"></audio>
+            {% endif %}
+            {% if entry.video %}
+                <video controls src="{{ entry.video.url }}" style="max-width: 300px; border-radius: 5px; margin-top: 0.5rem;"></video>
+            {% endif %}
+            <a href="{% url 'share_entry' entry.id %}" style="display: inline-block; padding: 0.5rem 1rem; background: linear-gradient(45deg, #007bff, #00d4ff); color: #fff; text-decoration: none; border-radius: 5px; margin-top: 0.5rem; transition: all 0.3s ease;">Share</a>
+        </div>
+    {% empty %}
+        <p style="font-style: italic;">No entries yet. Add one!</p>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}Share Entry{% endblock %}
+{% block content %}
+    <h1 style="font-size: 2rem; margin-bottom: 2rem;">Share This Moment</h1>
+    <p style="margin-bottom: 1rem;">Share this link (expires in 7 days):</p>
+    <input type="text" value="{{ share_url }}" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; background: rgba(255,255,255,0.05); color: #e6e6ff;" readonly onclick="this.select();">
+{% endblock %}

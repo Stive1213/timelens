@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}New Entry{% endblock %}
+{% block content %}
+    <h1 style="font-size: 2rem; margin-bottom: 2rem;">Add a New Moment</h1>
+    <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 1rem;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="padding: 0.75rem; background: linear-gradient(45deg, #007bff, #00d4ff); color: #fff; border: none; border-radius: 5px; cursor: pointer; transition: all 0.3s ease;">Save</button>
+    </form>
+{% endblock %}

@@ -10,6 +10,7 @@ import os
 from django.conf import settings
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
+from django.db import models  # Add this line
 
 # Download NLTK data (run once)
 nltk.download('vader_lexicon')
