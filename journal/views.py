@@ -4,6 +4,7 @@ from django.http import HttpResponseForbidden
 from .models import JournalEntry, ShareLink
 from .forms import JournalEntryForm
 from datetime import datetime, timedelta
+from django.utils import timezone  # Add this import
 import ffmpeg
 from PIL import Image
 import os
@@ -29,37 +30,35 @@ def create_entry(request):
             entry = form.save(commit=False)
             entry.user = request.user
             entry.timestamp = form.cleaned_data['timestamp']
-
-            # Save the entry to the database first to ensure files are written to disk
-            entry.save()
+            entry.save()  # Save initially to write files to disk
 
             # Process media files after saving
             if entry.photo:
                 img = Image.open(entry.photo.path)
-                img.thumbnail((300, 300))  # Resize to max 300x300
+                img.thumbnail((300, 300))
                 img.save(entry.photo.path)
             if entry.audio:
                 audio_path = entry.audio.path
-                output_path = audio_path.replace('.wav', '_converted.mp3')  # Example conversion
+                output_path = audio_path.replace('.wav', '_converted.mp3')
                 try:
                     stream = ffmpeg.input(audio_path)
                     stream = ffmpeg.output(stream, output_path, format='mp3')
                     ffmpeg.run(stream)
                     os.remove(audio_path)
                     entry.audio.name = entry.audio.name.replace('.wav', '_converted.mp3')
-                    entry.save()  # Update the entry with the new file name
+                    entry.save()
                 except ffmpeg.Error as e:
                     print(f"FFmpeg error: {e}")
             if entry.video:
                 video_path = entry.video.path
-                output_path = video_path.replace('.mov', '_converted.mp4')  # Example conversion
+                output_path = video_path.replace('.mov', '_converted.mp4')
                 try:
                     stream = ffmpeg.input(video_path)
                     stream = ffmpeg.output(stream, output_path, vcodec='libx264')
                     ffmpeg.run(stream)
                     os.remove(video_path)
                     entry.video.name = entry.video.name.replace('.mov', '_converted.mp4')
-                    entry.save()  # Update the entry with the new file name
+                    entry.save()
                 except ffmpeg.Error as e:
                     print(f"FFmpeg error: {e}")
 
@@ -67,7 +66,7 @@ def create_entry(request):
             if entry.text:
                 sentiment = sia.polarity_scores(entry.text)
                 entry.sentiment_score = sentiment['compound']
-                entry.save()  # Save sentiment score
+                entry.save()
 
             return redirect('timeline')
     else:
@@ -86,7 +85,7 @@ def share_entry(request, entry_id):
 
 def view_shared_entry(request, token):
     share_link = get_object_or_404(ShareLink, token=token)
-    if share_link.expires_at < datetime.now():
+    if share_link.expires_at < timezone.now():  # Use timezone.now() instead of datetime.now()
         return HttpResponseForbidden("This link has expired.")
     return render(request, 'journal/view_shared.html', {'entry': share_link.entry})
 
