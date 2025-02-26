@@ -10,7 +10,7 @@ import os
 from django.conf import settings
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
-from django.db import models  # Add this line
+from django.db import models
 
 # Download NLTK data (run once)
 nltk.download('vader_lexicon')
@@ -30,7 +30,10 @@ def create_entry(request):
             entry.user = request.user
             entry.timestamp = form.cleaned_data['timestamp']
 
-            # Process media files
+            # Save the entry to the database first to ensure files are written to disk
+            entry.save()
+
+            # Process media files after saving
             if entry.photo:
                 img = Image.open(entry.photo.path)
                 img.thumbnail((300, 300))  # Resize to max 300x300
@@ -44,6 +47,7 @@ def create_entry(request):
                     ffmpeg.run(stream)
                     os.remove(audio_path)
                     entry.audio.name = entry.audio.name.replace('.wav', '_converted.mp3')
+                    entry.save()  # Update the entry with the new file name
                 except ffmpeg.Error as e:
                     print(f"FFmpeg error: {e}")
             if entry.video:
@@ -55,6 +59,7 @@ def create_entry(request):
                     ffmpeg.run(stream)
                     os.remove(video_path)
                     entry.video.name = entry.video.name.replace('.mov', '_converted.mp4')
+                    entry.save()  # Update the entry with the new file name
                 except ffmpeg.Error as e:
                     print(f"FFmpeg error: {e}")
 
@@ -62,8 +67,8 @@ def create_entry(request):
             if entry.text:
                 sentiment = sia.polarity_scores(entry.text)
                 entry.sentiment_score = sentiment['compound']
+                entry.save()  # Save sentiment score
 
-            entry.save()
             return redirect('timeline')
     else:
         form = JournalEntryForm()
