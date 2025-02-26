@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+    <h1>Login</h1>
+    <form method="post" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="padding: 0.75rem; background: linear-gradient(45deg, #007bff, #00d4ff); color: #fff; border: none; border-radius: 5px; cursor: pointer; transition: all 0.3s ease;">Login</button>
+    </form>
+{% endblock %}

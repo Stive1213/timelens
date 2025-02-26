@@ -5,10 +5,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('journal.urls')),  # Include journal app URLs
-    path('accounts/', include('django.contrib.auth.urls')),  # Authentication URLs
+    path('', include('journal.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
-# Serve media files during development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
