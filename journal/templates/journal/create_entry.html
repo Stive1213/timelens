@@ -2,9 +2,32 @@
 {% block title %}New Entry{% endblock %}
 {% block content %}
     <h1 style="font-size: 2rem; margin-bottom: 2rem;">Add a New Moment</h1>
-    <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 1rem;">
+    <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 1.5rem;">
         {% csrf_token %}
-        {{ form.as_p }}
+        <div>
+            <label for="{{ form.timestamp.id_for_label }}" style="display: block; margin-bottom: 0.5rem;">Timestamp:</label>
+            <input type="datetime-local" name="timestamp" id="{{ form.timestamp.id_for_label }}" value="{{ form.timestamp.value|default:'' }}" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; background: rgba(255,255,255,0.05); color: #e6e6ff;">
+        </div>
+        <div>
+            <label for="{{ form.text.id_for_label }}" style="display: block; margin-bottom: 0.5rem;">Text:</label>
+            <textarea name="text" id="{{ form.text.id_for_label }}" rows="4" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; background: rgba(255,255,255,0.05); color: #e6e6ff;">{% if form.text.value %}{{ form.text.value }}{% endif %}</textarea>
+        </div>
+        <div>
+            <label for="{{ form.photo.id_for_label }}" style="display: block; margin-bottom: 0.5rem;">Photo:</label>
+            <input type="file" name="photo" id="{{ form.photo.id_for_label }}" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; background: rgba(255,255,255,0.05); color: #e6e6ff;">
+        </div>
+        <div>
+            <label for="{{ form.audio.id_for_label }}" style="display: block; margin-bottom: 0.5rem;">Audio:</label>
+            <input type="file" name="audio" id="{{ form.audio.id_for_label }}" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; background: rgba(255,255,255,0.05); color: #e6e6ff;">
+        </div>
+        <div>
+            <label for="{{ form.video.id_for_label }}" style="display: block; margin-bottom: 0.5rem;">Video:</label>
+            <input type="file" name="video" id="{{ form.video.id_for_label }}" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; background: rgba(255,255,255,0.05); color: #e6e6ff;">
+        </div>
+        <div>
+            <label for="{{ form.location.id_for_label }}" style="display: block; margin-bottom: 0.5rem;">Location:</label>
+            <input type="text" name="location" id="{{ form.location.id_for_label }}" value="{{ form.location.value|default:'' }}" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; background: rgba(255,255,255,0.05); color: #e6e6ff;">
+        </div>
         <button type="submit" style="padding: 0.75rem; background: linear-gradient(45deg, #007bff, #00d4ff); color: #fff; border: none; border-radius: 5px; cursor: pointer; transition: all 0.3s ease;">Save</button>
     </form>
 {% endblock %}
